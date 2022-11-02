@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7018844845556420582}
   - component: {fileID: 7487093073869478112}
   m_Layer: 8
-  m_Name: PoopLevel1
+  m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7018844845556420584}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1568f60bf203b145b68cc8dd698909f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b647648e8a43274e8ffc5626de8cb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Ground:
@@ -152,7 +152,7 @@ MonoBehaviour:
   Player:
     serializedVersion: 2
     m_Bits: 128
-  avgSpeed: 0.5
+  avgSpeed: 1.5
   spriteRenderer: {fileID: 7018844845556420580}
   sprites:
   - {fileID: 21300000, guid: e0dccd9298c081a4f9ff3229a13f3634, type: 3}
@@ -175,18 +175,3 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fac40a0c1c2567743abec794eb6bcd20, type: 3}
   - {fileID: 21300000, guid: ba025bd397a5bab469ef724220a7ae19, type: 3}
   - {fileID: 21300000, guid: b08b8fb90dd87984d8f4ea524f1876ec, type: 3}
-  Dead:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4208740085526549828, guid: 46019633fe4c3774b8dcb514cddf7796, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
