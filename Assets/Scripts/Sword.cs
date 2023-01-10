@@ -56,7 +56,7 @@ public class Sword : MonoBehaviour
 			{
 				// 오브젝트 풀에 반환하고 사망처리한다.
 				SwordManager.Instance.ReturnPool(this);
-				GameManager.Instance.Dead();
+				collision.GetComponent<Player>().Dead();
 			}
 		}
 	}

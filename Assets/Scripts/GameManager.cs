@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
             locationList.Add(i);
 	}
 
-    // 랜덤하게 칼을 생성하는 함수
+    // 칼을 랜덤하게 생성하기 위한 위치 함수
     private float GetRandomLocation()
 	{
         // 리스트에 값이 없다면 다시 채운다
@@ -104,7 +104,6 @@ public class GameManager : MonoBehaviour
         Sword sword = SwordManager.Instance.GetPool();
         // 칼 초기세팅
         sword.Setup();
-        // 칼 위치 세팅
         sword.transform.position = new Vector3(location, 20);
 	}
 
@@ -120,6 +119,8 @@ public class GameManager : MonoBehaviour
 	public void GetScore()
 	{
         score += 10 + level;
+        // 최고점수는 항상 큰값으로
+        bestScore = Mathf.Max(score, bestScore);
         // 난이도 조절
         ChangeLevel();
     }
@@ -158,14 +159,14 @@ public class GameManager : MonoBehaviour
         // 최고점수 기록
         if(PlayerPrefs.GetInt("BestScore") < score)
             PlayerPrefs.SetInt("BestScore", score);
-        // 플레이어 사망처리
-        player.IsDead();
 	}
 
     // 메뉴 화면 켜는 함수
     public void SetMenu()
 	{
         menu.SetActive(true);
+        // 커서 활성화
+        Cursor.visible = true;
     }
 
     // 게임시작시
@@ -175,7 +176,8 @@ public class GameManager : MonoBehaviour
         ReturnSwords();
         // 메뉴화면을 끈다
         menu.SetActive(false);
-
+        // 마우스 커서를 안보이게 한다
+        Cursor.visible = false;
         // 초기세팅
         isGameOver = false;
         isDead = false;
@@ -185,8 +187,10 @@ public class GameManager : MonoBehaviour
         coolTime = COOLTIME;
         count = locationList.Count;
 
+        UpdateUI();
+
         // 플레이어 초기 위치 설정
-        player.transform.position = startTransform.position;
+        player.Respawn(startTransform.position);
         // 칼을 떨어뜨리기 위한
         Time.timeScale = 1f;
     }

@@ -894,7 +894,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storage: {fileID: 1481668160}
   prefab: {fileID: 7487093073869478112, guid: 60369681a66e6ab45bcd51d3acd3343a, type: 3}
-  createCount: 30
+  createCount: 5
 --- !u!1 &1107574735
 GameObject:
   m_ObjectHideFlags: 0

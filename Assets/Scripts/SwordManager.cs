@@ -38,8 +38,8 @@ public class SwordManager : MonoBehaviour
     private void CreatePool()
     {
         // storage오브젝트의 하위에 prefab을 clone으로 생성한다.
-        Sword newPoop = Instantiate(prefab, storage);
-        storageStack.Push(newPoop);
+        Sword newSword = Instantiate(prefab, storage);
+        storageStack.Push(newSword);
     }
     public Sword GetPool()
     {
@@ -48,14 +48,14 @@ public class SwordManager : MonoBehaviour
             CreatePool();              // 추가한다
 
         // 스택에서 가져온다
-        Sword poop = storageStack.Pop();
-        poop.transform.SetParent(transform);
-        return poop;
+        Sword sword = storageStack.Pop();
+        sword.transform.SetParent(transform);
+        return sword;
     }
-    public void ReturnPool(Sword poop)
+    public void ReturnPool(Sword sword)
     {
         // 다시 비활성화 오브젝트 하위에 두고 스택에 넣는다.
-        poop.transform.SetParent(storage);
-        storageStack.Push(poop);
+        sword.transform.SetParent(storage);
+        storageStack.Push(sword);
     }
 }

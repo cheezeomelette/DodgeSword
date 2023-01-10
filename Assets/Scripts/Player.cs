@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     // 스킬 사용시 무적
     public bool invincibility;
-
+    bool isDead;
     const float skillCooltime = 3f;
     float currentSkillCool;
     bool canUseSkill;
@@ -30,23 +30,23 @@ public class Player : MonoBehaviour
     {
         float moveX = Input.GetAxisRaw("Horizontal");
         // 플레이어가 죽어있다면 실행하지 않는다
-        if (!GameManager.Instance.isDead)
+        if (isDead)
+            return;
+
+        Movement(moveX);
+        UseSkill();
+        // 스킬 쿨타임이 돌고있다면
+        if (!canUseSkill)
         {
-            Movement(moveX);
-            UseSkill();
-            // 스킬 쿨타임이 돌고있다면
-            if (!canUseSkill)
-			{
-                // 쿨타임을 줄여준다
-                currentSkillCool -= Time.deltaTime;
-                // 쿨타임을 다 돌면 사용가능 상태로 만든다
-                if (currentSkillCool < 0)
-				{
-                    canUseSkill = true;
-				}
-                // ui를 계속 업데이트 한다.
-                skillUI.UpdateUI(currentSkillCool, skillCooltime);
+            // 쿨타임을 줄여준다
+            currentSkillCool -= Time.deltaTime;
+            // 쿨타임을 다 돌면 사용가능 상태로 만든다
+            if (currentSkillCool < 0)
+            {
+                canUseSkill = true;
             }
+            // ui를 계속 업데이트 한다.
+            skillUI.UpdateUI(currentSkillCool, skillCooltime);
         }
     }
 
@@ -84,9 +84,23 @@ public class Player : MonoBehaviour
 		rigid.AddForce(new Vector2(x * speed, 0));
 	}
 
-    // 죽었을 때
-	public void IsDead()
+    // 리스폰
+    public void Respawn(Vector2 position)
 	{
+        isDead = false;
+        // 포지션 재배치
+        transform.position = position;
+	}
+
+    // 죽었을 때
+	public void Dead()
+	{
+        // 이미 죽어있다면 실행하지 않는다.
+        if (isDead)
+            return;
+
+        isDead = true;
+        GameManager.Instance.Dead();
         // 사망 애니메이션 실행
         anim.SetTrigger("onDead");
         // 속도 늦추는 연출
@@ -98,6 +112,8 @@ public class Player : MonoBehaviour
     // 시간을 멈추고 시작 메뉴를 켜줌
     private void StopTimeScale()
     {
+        // 플레이어의 속도를 0으로 만든다.
+        rigid.velocity = Vector2.zero;
         Time.timeScale = 0f;
         GameManager.Instance.isGameOver = true;
         GameManager.Instance.SetMenu();
