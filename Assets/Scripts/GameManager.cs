@@ -5,28 +5,28 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    // ¸Ş´ºÈ­¸é ¿ÀºêÁ§Æ®
+    // ë©”ë‰´í™”ë©´ ì˜¤ë¸Œì íŠ¸
     [SerializeField] GameObject menu;
     [SerializeField] GameObject swordPrefab;
-    // Ä® »ı¼º transform
+    // ì¹¼ ìƒì„± transform
     [SerializeField] Transform swordsTransform;
-    // ÇÃ·¹ÀÌ¾î ½ÃÀÛ transform
+    // í”Œë ˆì´ì–´ ì‹œì‘ transform
     [SerializeField] Transform startTransform;
     [SerializeField] Text ScoreText;
     [SerializeField] Player player;
 
-    // ½Ì±ÛÅæ
+    // ì‹±ê¸€í†¤
     private static GameManager instance;
     public static GameManager Instance => instance;
     public bool isGameOver;
     public bool isDead;
     public int score;
-    // Ä® »ı¼º ÁÖ±â¿Í ½ºÇÁ¶óÀÌÆ®¸¦ ¹Ù²Ü ±âÁØ
+    // ì¹¼ ìƒì„± ì£¼ê¸°ì™€ ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ë°”ê¿€ ê¸°ì¤€
     public int level;
-    // Ä® »ı¼º ÁÖ±â
+    // ì¹¼ ìƒì„± ì£¼ê¸°
     public float coolTime;
 
-    // Ä® »ı¼º À§Ä¡ ¸®½ºÆ®
+    // ì¹¼ ìƒì„± ìœ„ì¹˜ ë¦¬ìŠ¤íŠ¸
     List<int> locationList;
     const float COOLTIME = 0.1f;
     float currentTime;
@@ -34,20 +34,20 @@ public class GameManager : MonoBehaviour
     int bestScore;
 
     private void Awake()
-	{
-        instance = this;
-        // 30°³ÀÇ »ı¼ºÀ§Ä¡ ¸®½ºÆ®
-        locationList = new List<int>(30);
-	}
-	void Start()
     {
-        // ½ÃÀÛ ½Ã Ä®ÀÌ ¶³¾îÁöÁö ¾Ê°Ô ½ºÄÉÀÏÀ» 0À¸·Î ¸ÂÃã
+        instance = this;
+        // 30ê°œì˜ ìƒì„±ìœ„ì¹˜ ë¦¬ìŠ¤íŠ¸
+        locationList = new List<int>(30);
+    }
+    void Start()
+    {
+        // ì‹œì‘ ì‹œ ì¹¼ì´ ë–¨ì–´ì§€ì§€ ì•Šê²Œ ìŠ¤ì¼€ì¼ì„ 0ìœ¼ë¡œ ë§ì¶¤
         Time.timeScale = 0f;
-        // ¸Ş´ºÈ­¸é ÄÑ±â
+        // ë©”ë‰´í™”ë©´ ì¼œê¸°
         menu.SetActive(true);
-        // PlayerPrefs¿¡ ÀúÀåÇØµĞ ÃÖ°íÁ¡¼ö °¡Á®¿È
+        // PlayerPrefsì— ì €ì¥í•´ë‘” ìµœê³ ì ìˆ˜ ê°€ì ¸ì˜´
         bestScore = PlayerPrefs.GetInt("BestScore");
-        // ¸®½ºÆ® ¼¼ÆÃ
+        // ë¦¬ìŠ¤íŠ¸ ì„¸íŒ…
         ListInit();
         UpdateUI();
     }
@@ -55,60 +55,60 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         currentTime += Time.deltaTime;
-        // ÄğÅ¸ÀÓÀÌ µ¹¸é
+        // ì¿¨íƒ€ì„ì´ ëŒë©´
         if(coolTime < currentTime)
-		{
-            // Ä® »ı¼º
+        {
+            // ì¹¼ ìƒì„±
             currentTime = 0f;
             GenerateSword();
-		}
+        }
     }
 
-    // ÃÊ±â »ı¼ºÀ§Ä¡ ¸®½ºÆ® ÃÊ±âÈ­
+    // ì´ˆê¸° ìƒì„±ìœ„ì¹˜ ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
     private void ListInit()
-	{
-        // 1´ÜÀ§·Î ±ÕÀÏÇÏ°Ô Ä® »ı¼ºÀ§Ä¡ ¸®½ºÆ®¸¦ ¸¸µç´Ù.
+    {
+        // 1ë‹¨ìœ„ë¡œ ê· ì¼í•˜ê²Œ ì¹¼ ìƒì„±ìœ„ì¹˜ ë¦¬ìŠ¤íŠ¸ë¥¼ ë§Œë“ ë‹¤.
         for (int i = 0; i < locationList.Capacity; i++)
             locationList.Add(i);
-	}
+    }
 
-    // ·£´ıÇÏ°Ô Ä®À» »ı¼ºÇÏ´Â ÇÔ¼ö
+    // ëœë¤í•˜ê²Œ ì¹¼ì„ ìƒì„±í•˜ëŠ” í•¨ìˆ˜
     private float GetRandomLocation()
-	{
-        // ¸®½ºÆ®¿¡ °ªÀÌ ¾ø´Ù¸é ´Ù½Ã Ã¤¿î´Ù
+    {
+        // ë¦¬ìŠ¤íŠ¸ì— ê°’ì´ ì—†ë‹¤ë©´ ë‹¤ì‹œ ì±„ìš´ë‹¤
         if (count <= 0)
-		{
+    	{
             count = locationList.Count;
-		}
-		// ·£´ıÇÑ ¸®½ºÆ®ÀÇ ÀÎµ¦½º »ı¼º
-		int randIndex = Random.Range(0, count);
-        // »ı¼ºÀ§Ä¡¿¡¼­ ¾à°£¾¿ Æ²¾îÁö°Ô ÇÏ±âÀ§ÇÑ offset
+    	}
+    	// ëœë¤í•œ ë¦¬ìŠ¤íŠ¸ì˜ ì¸ë±ìŠ¤ ìƒì„±
+    	int randIndex = Random.Range(0, count);
+        // ìƒì„±ìœ„ì¹˜ì—ì„œ ì•½ê°„ì”© í‹€ì–´ì§€ê²Œ í•˜ê¸°ìœ„í•œ offset
         float offset = Random.Range(-0.5f, 0.6f);
-        // ·£´ıÇÑ À§Ä¡
+        // ëœë¤í•œ ìœ„ì¹˜
         int randLocation = locationList[randIndex];
-        // °°Àº À§Ä¡¿¡¼­ ¿¬¼ÓÇØ¼­ ³ª¿ÀÁö¾Ê°í ±ÕÀÏÇÏ°Ô ÇÏ±â À§ÇØ ³ª¿Â À§Ä¡´Â ¸®½ºÆ®ÀÇ Á¦ÀÏµÚ·Î º¸³»°í 
-        // Á¦ÀÏµÚÀÇ À§Ä¡ÀÎ count¸¦ ÇÑÄ­ ´ç°ÜÁØ´Ù
+        // ê°™ì€ ìœ„ì¹˜ì—ì„œ ì—°ì†í•´ì„œ ë‚˜ì˜¤ì§€ì•Šê³  ê· ì¼í•˜ê²Œ í•˜ê¸° ìœ„í•´ ë‚˜ì˜¨ ìœ„ì¹˜ëŠ” ë¦¬ìŠ¤íŠ¸ì˜ ì œì¼ë’¤ë¡œ ë³´ë‚´ê³  
+        // ì œì¼ë’¤ì˜ ìœ„ì¹˜ì¸ countë¥¼ í•œì¹¸ ë‹¹ê²¨ì¤€ë‹¤
         Swap(locationList, randIndex, count-1);
         count--;
 
-        // ·£´ıÇÑ À§Ä¡¿¡ offsetÀ» ´õÇÑ´Ù
+        // ëœë¤í•œ ìœ„ì¹˜ì— offsetì„ ë”í•œë‹¤
         return randLocation + offset;
-	}
+    }
 
-    // Ä® »ı¼º
+    // ì¹¼ ìƒì„±
     private void GenerateSword()
-	{
-        // ·£´ıÇÑ À§Ä¡¸¦ °¡Á®¿Â´Ù
+    {
+        // ëœë¤í•œ ìœ„ì¹˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤
         float location = GetRandomLocation();
-        // ¿ÀºêÁ§Æ® Ç®¿¡¼­ Ä® ¿ÀºêÁ§Æ®¸¦ °¡Á®¿Â´Ù
+        // ì˜¤ë¸Œì íŠ¸ í’€ì—ì„œ ì¹¼ ì˜¤ë¸Œì íŠ¸ë¥¼ ê°€ì ¸ì˜¨ë‹¤
         Sword sword = SwordManager.Instance.GetPool();
-        // Ä® ÃÊ±â¼¼ÆÃ
+        // ì¹¼ ì´ˆê¸°ì„¸íŒ…
         sword.Setup();
-        // Ä® À§Ä¡ ¼¼ÆÃ
+        // ì¹¼ ìœ„ì¹˜ ì„¸íŒ…
         sword.transform.position = new Vector3(location, 20);
-	}
+    }
 
-    // ¸®½ºÆ® ½º¿ÒÇÔ¼ö
+    // ë¦¬ìŠ¤íŠ¸ ìŠ¤ì™‘í•¨ìˆ˜
     private void Swap(List<int> list, int from, int to)
     {
         int tmp = list[from];
@@ -116,18 +116,18 @@ public class GameManager : MonoBehaviour
         list[to] = tmp;
     }
 
-    // Á¡¼ö È¹µæ ÇÔ¼ö
-	public void GetScore()
-	{
+    // ì ìˆ˜ íšë“ í•¨ìˆ˜
+    public void GetScore()
+    {
         score += 10 + level;
-        // ³­ÀÌµµ Á¶Àı
+        // ë‚œì´ë„ ì¡°ì ˆ
         ChangeLevel();
     }
 
-    // ³­ÀÌµµ Á¶Àı ÇÔ¼ö
+    // ë‚œì´ë„ ì¡°ì ˆ í•¨ìˆ˜
     private void ChangeLevel()
     {
-        // Á¡¼ö¿¡ µû¶ó ·¹º§À» ¹Ù²Û´Ù.
+        // ì ìˆ˜ì— ë”°ë¼ ë ˆë²¨ì„ ë°”ê¾¼ë‹¤.
         for (; level < 19; level++)
         {
             if (GameManager.Instance.score < 350 * (level * 1.7 + 1))
@@ -137,46 +137,46 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Á¡¼ö ¾÷µ¥ÀÌÆ®
+    // ì ìˆ˜ ì—…ë°ì´íŠ¸
     public void UpdateUI()
-	{
+    {
         ScoreText.text = string.Format($"Best : {bestScore}\nScore : {score}");
-	}
+    }
 
-    // Ä® »ı¼º ¼Óµµ¸¦ ¾Õ´ç±ä´Ù
+    // ì¹¼ ìƒì„± ì†ë„ë¥¼ ì•ë‹¹ê¸´ë‹¤
     public void LevelDesign()
-	{
+    {
         if (coolTime < 0.03)
             return;
         coolTime -= 0.0001f;
-	}
+    }
 
-    // Á×¾úÀ» ¶§
+    // ì£½ì—ˆì„ ë•Œ
     public void Dead()
-	{
-		isDead = true;
-        // ÃÖ°íÁ¡¼ö ±â·Ï
+    {
+    	isDead = true;
+        // ìµœê³ ì ìˆ˜ ê¸°ë¡
         if(PlayerPrefs.GetInt("BestScore") < score)
             PlayerPrefs.SetInt("BestScore", score);
-        // ÇÃ·¹ÀÌ¾î »ç¸ÁÃ³¸®
+        // í”Œë ˆì´ì–´ ì‚¬ë§ì²˜ë¦¬
         player.IsDead();
-	}
+    }
 
-    // ¸Ş´º È­¸é ÄÑ´Â ÇÔ¼ö
+    // ë©”ë‰´ í™”ë©´ ì¼œëŠ” í•¨ìˆ˜
     public void SetMenu()
-	{
+    {
         menu.SetActive(true);
     }
 
-    // °ÔÀÓ½ÃÀÛ½Ã
+    // ê²Œì„ì‹œì‘ì‹œ
     public void StartGame()
-	{
-        // ÀÌÀü¿¡ ³²¾ÆÀÖ´ø Ä®Àº È¸¼öÇÑ´Ù
+    {
+        // ì´ì „ì— ë‚¨ì•„ìˆë˜ ì¹¼ì€ íšŒìˆ˜í•œë‹¤
         ReturnSwords();
-        // ¸Ş´ºÈ­¸éÀ» ²ö´Ù
+        // ë©”ë‰´í™”ë©´ì„ ëˆë‹¤
         menu.SetActive(false);
 
-        // ÃÊ±â¼¼ÆÃ
+        // ì´ˆê¸°ì„¸íŒ…
         isGameOver = false;
         isDead = false;
         currentTime = 0f;
@@ -185,33 +185,33 @@ public class GameManager : MonoBehaviour
         coolTime = COOLTIME;
         count = locationList.Count;
 
-        // ÇÃ·¹ÀÌ¾î ÃÊ±â À§Ä¡ ¼³Á¤
+        // í”Œë ˆì´ì–´ ì´ˆê¸° ìœ„ì¹˜ ì„¤ì •
         player.transform.position = startTransform.position;
-        // Ä®À» ¶³¾î¶ß¸®±â À§ÇÑ
+        // ì¹¼ì„ ë–¨ì–´ëœ¨ë¦¬ê¸° ìœ„í•œ
         Time.timeScale = 1f;
     }
 
-    // Ä® ¸®ÅÏ ÇÔ¼ö
+    // ì¹¼ ë¦¬í„´ í•¨ìˆ˜
     private void ReturnSwords()
-	{
-        // Ä®ÀÌ ³²¾Æ ÀÖ´Â µ¿¾È
-		while (swordsTransform.childCount > 0)
-		{
-            // Ä®ÀÌ ÀÖ´Â transformÀÇ Ã¹¹øÂ°¸¦ ¿ÀºêÁ§Æ® Ç®¿¡ ¸®ÅÏ½ÃÅ²´Ù
+    {
+        // ì¹¼ì´ ë‚¨ì•„ ìˆëŠ” ë™ì•ˆ
+    	while (swordsTransform.childCount > 0)
+    	{
+            // ì¹¼ì´ ìˆëŠ” transformì˜ ì²«ë²ˆì§¸ë¥¼ ì˜¤ë¸Œì íŠ¸ í’€ì— ë¦¬í„´ì‹œí‚¨ë‹¤
             Sword sword = swordsTransform.GetChild(0).GetComponent<Sword>();
             SwordManager.Instance.ReturnPool(sword);
-		}
-	}
+    	}
+    }
 
-    // °ÔÀÓÁ¾·á
-	public void Quit()
-	{
+    // ê²Œì„ì¢…ë£Œ
+    public void Quit()
+    {
         Application.Quit();
-	}
+    }
 
-    // ¹«Àû Ã¼Å©
-	public bool Getinvincibility()
-	{
+    // ë¬´ì  ì²´í¬
+    public bool Getinvincibility()
+    {
         return player.invincibility;
-	}
+    }
 }
