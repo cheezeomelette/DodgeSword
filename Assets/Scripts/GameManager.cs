@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour
     public void GetScore()
     {
         score += 10 + level;
+        bestScore = Mathf.Max(bestScore, score);
         // 난이도 조절
         ChangeLevel();
     }
@@ -131,9 +132,7 @@ public class GameManager : MonoBehaviour
         for (; level < 19; level++)
         {
             if (GameManager.Instance.score < 350 * (level * 1.7 + 1))
-            {
                 return;
-            }
         }
     }
 
@@ -158,8 +157,6 @@ public class GameManager : MonoBehaviour
         // 최고점수 기록
         if(PlayerPrefs.GetInt("BestScore") < score)
             PlayerPrefs.SetInt("BestScore", score);
-        // 플레이어 사망처리
-        player.IsDead();
     }
 
     // 메뉴 화면 켜는 함수
@@ -177,6 +174,7 @@ public class GameManager : MonoBehaviour
         menu.SetActive(false);
 
         // 초기세팅
+        player.Respawn(startTransform.position);
         isGameOver = false;
         isDead = false;
         currentTime = 0f;
@@ -185,8 +183,7 @@ public class GameManager : MonoBehaviour
         coolTime = COOLTIME;
         count = locationList.Count;
 
-        // 플레이어 초기 위치 설정
-        player.transform.position = startTransform.position;
+        UpdateUI();
         // 칼을 떨어뜨리기 위한
         Time.timeScale = 1f;
     }
