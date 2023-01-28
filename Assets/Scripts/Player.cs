@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
 		}
 
 		// 입력이 있을 때 힘을 가해서 약간 미끄러지도록 속도를 조절한다
-		rigid.AddForce(new Vector2(moveX * speed, 0) * 15 *Time.deltaTime);
+		rigid.AddForce(new Vector2(moveX * speed, 0) * 15 *ObjectTime.deltaTime);
 	}
 
 	// 스킬사용 함수
@@ -101,13 +101,13 @@ public class Player : MonoBehaviour
 	private void SlowDown()
 	{
 		if (rigid.velocity.x > 5)
-			rigid.velocity = rigid.velocity - new Vector2(20f * Time.deltaTime, 0);
+			rigid.velocity = rigid.velocity - new Vector2(40f * ObjectTime.deltaTime, 0);
 		else if(rigid.velocity.x > 0)
-			rigid.velocity = rigid.velocity - new Vector2(10f * Time.deltaTime, 0);
+			rigid.velocity = rigid.velocity - new Vector2(20f * ObjectTime.deltaTime, 0);
 		else if (rigid.velocity.x < -5)
-			rigid.velocity = rigid.velocity + new Vector2(20f * Time.deltaTime, 0);
+			rigid.velocity = rigid.velocity + new Vector2(40f * ObjectTime.deltaTime, 0);
 		else if(rigid.velocity.x < 0)
-			rigid.velocity = rigid.velocity + new Vector2(10f * Time.deltaTime, 0);
+			rigid.velocity = rigid.velocity + new Vector2(20f * ObjectTime.deltaTime, 0);
 	}
 
 	private void UpdateSkillUI()
@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
 		if (!canUseSkill)
 		{
 			// 쿨타임을 줄여준다
-			currentSkillCool -= Time.deltaTime;
+			currentSkillCool -= ObjectTime.deltaTime;
 			// 쿨타임을 다 돌면 사용가능 상태로 만든다
 			if (currentSkillCool < 0)
 			{
@@ -131,6 +131,7 @@ public class Player : MonoBehaviour
 	{
 		gameObject.SetActive(false);
 		isDead = false;
+		anim.speed = 1f;
 		transform.position = position;
 		currentSkillCool = 0f;
 		gameObject.SetActive(true);
@@ -148,9 +149,9 @@ public class Player : MonoBehaviour
 		// 사망 애니메이션 실행
 		anim.SetTrigger("onDead");
 		// 속도 늦추는 연출
-		Time.timeScale = 0.5f;
+		ObjectTime.timeScale = 0.5f;
 		// 1.5초 후 함수 발생
-		Invoke(nameof(StopTimeScale), 1.5f * Time.timeScale);
+		Invoke(nameof(StopTimeScale), 1.5f * ObjectTime.timeScale);
 	}
 
 	// 시간을 멈추고 시작 메뉴를 켜줌
@@ -158,7 +159,8 @@ public class Player : MonoBehaviour
 	{
 		// 플레이어의 속도를 0으로 만든다.
 		rigid.velocity = Vector2.zero;
-		Time.timeScale = 0f;
+		ObjectTime.timeScale = 0f;
+		anim.speed = 0f;
 		GameManager.Instance.isGameOver = true;
 		GameManager.Instance.SetMenu();
 	}
@@ -168,10 +170,5 @@ public class Player : MonoBehaviour
 	private void ExitSkill()
 	{
 		invincibility = false;
-	}
-
-	public void Test()
-	{
-		Debug.Log("Doing");
 	}
 }

@@ -1,6 +1,8 @@
+using GooglePlayGames;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -14,6 +16,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform startTransform;
     [SerializeField] Text ScoreText;
     [SerializeField] Player player;
+    [SerializeField] GameObject scoreAlarm;
+    [SerializeField] Transform showPivot;
+    [SerializeField] Transform hidePivot;
+    [SerializeField] Text testText;
 
     // 싱글톤
     private static GameManager instance;
@@ -41,12 +47,12 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        // 프레임 설정
+        Application.targetFrameRate = 60;
         // 시작 시 칼이 떨어지지 않게 스케일을 0으로 맞춤
-        Time.timeScale = 0f;
+        ObjectTime.timeScale = 0f;
         // 메뉴화면 켜기
         menu.SetActive(true);
-        // PlayerPrefs에 저장해둔 최고점수 가져옴
-        bestScore = PlayerPrefs.GetInt("BestScore");
         // 리스트 세팅
         ListInit();
         UpdateUI();
@@ -54,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        currentTime += Time.deltaTime;
+        currentTime += ObjectTime.deltaTime;
         // 쿨타임이 돌면
         if(coolTime < currentTime)
         {
@@ -119,6 +125,8 @@ public class GameManager : MonoBehaviour
     // 점수 획득 함수
     public void GetScore()
     {
+        if (isDead)
+            return;
         score += 10 + level;
         bestScore = Mathf.Max(bestScore, score);
         // 난이도 조절
@@ -155,8 +163,13 @@ public class GameManager : MonoBehaviour
     {
     	isDead = true;
         // 최고점수 기록
-        if(PlayerPrefs.GetInt("BestScore") < score)
-            PlayerPrefs.SetInt("BestScore", score);
+        if(bestScore == score)
+		{
+            StartCoroutine(ShowNotice());
+            Social.ReportScore(score, "CgkI6YaVy7wNEAIQBQ", (bool success) => {
+                // handle success or failure
+            });
+        }
     }
 
     // 메뉴 화면 켜는 함수
@@ -185,7 +198,7 @@ public class GameManager : MonoBehaviour
 
         UpdateUI();
         // 칼을 떨어뜨리기 위한
-        Time.timeScale = 1f;
+        ObjectTime.timeScale = 1f;
     }
 
     // 칼 리턴 함수
@@ -210,5 +223,37 @@ public class GameManager : MonoBehaviour
     public bool Getinvincibility()
     {
         return player.invincibility;
+    }
+
+    public void SetBestScore()
+	{
+        ILeaderboard lb = PlayGamesPlatform.Instance.CreateLeaderboard();
+        lb.id = GPGSIds.leaderboard;
+
+        lb.LoadScores(scores =>
+        {
+            bestScore = (int)lb.localUserScore.value;
+            UpdateUI();
+        });
+    }
+
+    IEnumerator ShowNotice()
+	{
+        float distance = Vector2.Distance(showPivot.position, hidePivot.position);
+        Vector3 showPos = showPivot.position;
+        Vector3 hidePos = hidePivot.position;
+        while (scoreAlarm.transform.position != showPos)
+		{
+            scoreAlarm.transform.position = Vector2.MoveTowards(scoreAlarm.transform.position, showPos, distance * Time.deltaTime);
+            yield return null;
+		}
+
+        yield return new WaitForSeconds(1f);
+        
+        while (scoreAlarm.transform.position != hidePos)
+        {
+            scoreAlarm.transform.position = Vector2.MoveTowards(scoreAlarm.transform.position, hidePos, distance * Time.deltaTime);
+            yield return null;
+        }
     }
 }

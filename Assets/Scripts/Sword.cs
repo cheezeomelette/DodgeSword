@@ -6,24 +6,19 @@ public class Sword : MonoBehaviour
 {
 	[SerializeField] LayerMask Ground;
 	[SerializeField] LayerMask Player;
-	[SerializeField] float avgSpeed = 0f;
+	[SerializeField] float addAcc;
 	[SerializeField] SpriteRenderer spriteRenderer;
 	// 레벨에 따라 변화할 스프라이트 모음
 	[SerializeField] Sprite[] sprites;
-	Rigidbody2D rigid;
 
-	// 떨어지는 랜덤속도
-	float randSpeed;
-
-	private void Start()
-	{
-		rigid = GetComponent<Rigidbody2D>();
-	}
+	float velocity;
+	float acc = -9.8f;
+	float randAcc;
 
 	private void Update()
 	{
-		// 랜덤 속도로 아래로 떨어집니다.
-		rigid.AddForce(new Vector2(0, randSpeed), ForceMode2D.Force);
+		velocity += ObjectTime.deltaTime * (acc + randAcc);
+		transform.position += new Vector3(0, ObjectTime.deltaTime * velocity, 0);
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
@@ -65,7 +60,8 @@ public class Sword : MonoBehaviour
 	public void Setup()
 	{
 		// 랜덤속도를 적용하고 레벨에 맞는 칼로 스프라이트를 변경한다.
-		randSpeed = Random.Range(-avgSpeed, -(avgSpeed + 2));
+		velocity = 0;
+		randAcc = Random.Range(0, -addAcc);
 		spriteRenderer.sprite = sprites[GameManager.Instance.level];
 	}
 }

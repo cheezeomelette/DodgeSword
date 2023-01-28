@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7018844845556420585}
   - component: {fileID: 7018844845556420580}
-  - component: {fileID: 7018844845556420583}
   - component: {fileID: 7018844845556420582}
   - component: {fileID: 7487093073869478112}
+  - component: {fileID: -8026273287077420606}
   m_Layer: 8
   m_Name: Sword
   m_TagString: Untagged
@@ -87,27 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &7018844845556420583
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7018844845556420584}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!61 &7018844845556420582
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -152,7 +131,7 @@ MonoBehaviour:
   Player:
     serializedVersion: 2
     m_Bits: 128
-  avgSpeed: 1.5
+  addAcc: 5
   spriteRenderer: {fileID: 7018844845556420580}
   sprites:
   - {fileID: 21300000, guid: e0dccd9298c081a4f9ff3229a13f3634, type: 3}
@@ -175,3 +154,24 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fac40a0c1c2567743abec794eb6bcd20, type: 3}
   - {fileID: 21300000, guid: ba025bd397a5bab469ef724220a7ae19, type: 3}
   - {fileID: 21300000, guid: b08b8fb90dd87984d8f4ea524f1876ec, type: 3}
+--- !u!50 &-8026273287077420606
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7018844845556420584}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
