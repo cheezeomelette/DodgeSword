@@ -33,17 +33,17 @@ private float GetRandomLocation()
 {
     // 리스트에 값이 없다면 다시 채운다
     if (count <= 0)
-		{
+        {
         count = locationList.Count;
-		}
-		// 랜덤한 리스트의 인덱스 생성
-		int randIndex = Random.Range(0, count);
+        }
+        // 랜덤한 리스트의 인덱스 생성
+        int randIndex = Random.Range(0, count);
     // 생성위치에서 약간씩 틀어지게 하기위한 offset
     float offset = Random.Range(-0.5f, 0.6f);
     // 랜덤한 위치
     int randLocation = locationList[randIndex];
     
-		// 같은 위치에서 연속해서 나오지않고 균일하게 하기 위해 나온 위치는 리스트의 제일뒤로 보내고 
+        // 같은 위치에서 연속해서 나오지않고 균일하게 하기 위해 나온 위치는 리스트의 제일뒤로 보내고 
     // 제일뒤의 위치인 count를 한칸 당겨준다
     Swap(locationList, randIndex, count-1);
     count--;
@@ -86,5 +86,28 @@ public void ReturnPool(Sword poop)
     // 다시 비활성화 오브젝트 하위에 두고 스택에 넣는다.
     poop.transform.SetParent(storage);
     storageStack.Push(poop);
+}
+```
+
+### ⏰오브젝트 전용 시간 생성
+
+- 사망 연출을 할 때 Time.timeScale을 조절했는데 의도하지 않은 UI 속도에도 영향이 생겼다.
+- 이를 해결하기 위해 오브젝트의 시간을 담당할 변수를 만들어 기존 시간과 분리해서 사용하기로 했다
+- 기존의 Time.deltaTime을 활용해서 오브젝트의 움직임에 사용할 시간을 새로 정의해서 사용한다.
+
+```csharp
+public static class ObjectTime 
+{
+    public static float timeScale = 1f;
+    public static float deltaTime => Time.deltaTime * timeScale;
+}
+```
+
+- 칼이 떨어지는 것을 구현한 함수이다.
+```csharp
+private void Update()
+{
+    velocity += ObjectTime.deltaTime * (acc + randAcc);
+    transform.position += new Vector3(0, ObjectTime.deltaTime * velocity, 0);
 }
 ```
