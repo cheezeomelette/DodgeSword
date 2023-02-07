@@ -6,6 +6,7 @@
     
     끝까지 살아남아 최고점을 달성하세요!
     
+[Google Play 출시](https://play.google.com/store/apps/details?id=com.cheezeomelette.DodgeSword)
 
 ![dodgeSword게임_시작.png](Dodge%20Sword%20ba2f0c024cf4432f91602c95cdd9ed6b/dodgeSword%25EA%25B2%258C%25EC%259E%2584_%25EC%258B%259C%25EC%259E%2591.png)
 
