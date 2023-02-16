@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 칼 오브젝트 풀링
-public class SwordManager : MonoBehaviour
+public class SwordPool : MonoBehaviour
 {
     // 싱글톤패턴
-    static SwordManager instance;
-    public static SwordManager Instance => instance;
+    static SwordPool instance;
+    public static SwordPool Instance => instance;
 
     // 비활성화해둔 저장위치
     [SerializeField] Transform storage;

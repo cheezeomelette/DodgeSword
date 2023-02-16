@@ -5,9 +5,9 @@ using UnityEngine.SocialPlatforms;
 
 public class GPGSManager : MonoBehaviour
 {
+#if UNITY_ANDROID
     public string Token;
     public string Error;
-
     void Awake()
     {
         //Initialize PlayGamesPlatform
@@ -43,4 +43,5 @@ public class GPGSManager : MonoBehaviour
 	{
         Social.ShowLeaderboardUI();
     }
+#endif
 }
