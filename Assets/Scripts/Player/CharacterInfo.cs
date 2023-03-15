@@ -6,7 +6,12 @@ using UnityEngine;
 
 public class CharacterInfo : ScriptableObject
 {
+    public RuntimeAnimatorController animController;
+    public Sprite idleSprite;
+    public Sprite skillSprite;
     public string characterName;
+    public string skillName;
+    public string skillDescription;
     public float skillCoolTime;
     public float speed;
     public float brake;

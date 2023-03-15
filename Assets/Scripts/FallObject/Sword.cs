@@ -29,7 +29,7 @@ public class Sword : FallingObject
 		else if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
 			// 스킬울 사용해서 무적 상태라면
-			if (collision.GetComponent<Player>().isInvincibility)
+			if (collision.GetComponent<Character>().isInvincibility)
 			{
 				// 칼 재생성 시간을 줄인다.
 				GameManager.Instance.GenerateSwordFaster();
@@ -41,12 +41,12 @@ public class Sword : FallingObject
 			{
 				// 오브젝트 풀에 반환하고 데미지처리한다.
 				SwordPool.Instance.ReturnPool(this);
-				collision.GetComponent<Player>().GetDamaged();
+				collision.GetComponent<Character>().GetDamaged();
 				SoundManager.Instance.Play("GetDamaged");
 			}
 		}
 		GameManager.Instance.GetScore();
-		GameManager.Instance.UpdateUI();
+		GameManager.Instance.UpdateScoreUI();
 	}
 
 	// 칼 초기 세팅

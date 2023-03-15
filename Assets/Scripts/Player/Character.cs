@@ -2,21 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof (Rigidbody2D))]
-public class Player : MonoBehaviour
+[RequireComponent(typeof(Rigidbody2D))]
+public class Character : MonoBehaviour
 {
-	[SerializeField] SkillUI skillUI;
-	[SerializeField] HpUI hpUI;
+	public CharacterInfo characterInfo;
 	SpriteRenderer spriteRenderer;
-	CharacterInfo characterInfo;
 	TouchManager mTouchManager;
-	Rigidbody2D rigid;
-	Animator anim;
+	SkillUI skillUI;
+	HpUI hpUI;
+
+	protected Rigidbody2D rigid;
+	protected Animator anim;
 
 	// 스킬 사용시 무적
 	bool invincibility;
 	public bool isInvincibility => invincibility;
-
+	public string characterName
+	{
+		get
+		{
+			return characterInfo.characterName;
+		}
+	}
 	float currentSkillCool;
 	float skillCooltime;
 	bool canUseSkill;
@@ -30,7 +37,7 @@ public class Player : MonoBehaviour
 	int hp;
 
 
-	private void Start()
+	public void Init()
 	{
 		mTouchManager = new TouchManager(Camera.main.transform);
 		spriteRenderer = GetComponent<SpriteRenderer>();
@@ -42,9 +49,10 @@ public class Player : MonoBehaviour
 		isDead = true;
 
 		currentSkillCool = 0f;
+		SetCharacterInfo();
 	}
 
-	private void Update()
+	protected virtual void Update()
 	{
 		// 플레이어가 죽어있다면 실행하지 않는다
 		if (isDead)
@@ -57,13 +65,21 @@ public class Player : MonoBehaviour
 		UpdateSkillUI();
 	}
 
-	public void SetCharacterInfo(CharacterInfo info)
+	public void SetPlayerUI(SkillUI skillUI, HpUI hpUI)
 	{
-		skillCooltime = info.skillCoolTime;
-		speed = info.speed;
-		brake = info.brake;
-		maxHp = info.maxHp;
-		startHp = info.hp;
+		this.skillUI = skillUI;
+		this.hpUI = hpUI;
+
+		skillUI.SetSkill(UseSkill,characterInfo.skillSprite);
+	}
+
+	public void SetCharacterInfo()
+	{
+		skillCooltime = characterInfo.skillCoolTime;
+		speed = characterInfo.speed;
+		brake = characterInfo.brake;
+		maxHp = characterInfo.maxHp;
+		startHp = characterInfo.hp;
 		hp = startHp;
 		hpUI.InitHp(startHp, maxHp);
 	}
@@ -94,11 +110,10 @@ public class Player : MonoBehaviour
 	// 스킬사용 함수
 	public void UseSkill()
 	{
-		// 스킬 쿨타임이 아닐 때 z키를 누르면 스킬 사용
 		if (canUseSkill && !isDead)
 		{
 			// 스킬 애니메이션 실행
-			anim.SetTrigger("onSpin");
+			anim.SetTrigger("onSkill");
 			// 무적상태
 			invincibility = true;
 			// 스킬사용 불가
@@ -133,6 +148,7 @@ public class Player : MonoBehaviour
 		anim.speed = 1f;
 		transform.position = position;
 		currentSkillCool = 0f;
+		canUseSkill = false;
 		gameObject.SetActive(true);
 		UpdateHpUI(hp, maxHp);
 	}
@@ -149,7 +165,7 @@ public class Player : MonoBehaviour
 	}
 
 	// 움직임
-	private void Movement()
+	protected virtual void Movement()
 	{
 		float moveX = 0;
 		if (Input.touchCount == 1 && mTouchManager.touch2BoardPosition.y > -3f && mTouchManager.touch2BoardPosition.y < 3f)
@@ -217,7 +233,7 @@ public class Player : MonoBehaviour
 	}
 
 	// 스킬 종료 시 무적 해제
-	private void ExitSkill()
+	protected void ExitSkill()
 	{
 		invincibility = false;
 	}

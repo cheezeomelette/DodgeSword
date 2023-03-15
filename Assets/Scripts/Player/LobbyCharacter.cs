@@ -22,7 +22,7 @@ public class LobbyCharacter : MonoBehaviour
 		Count
 	}
 
-	private void Start()
+	public void Init()
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		rigid = GetComponent<Rigidbody2D>();
@@ -30,8 +30,10 @@ public class LobbyCharacter : MonoBehaviour
 		StartCoroutine(StateMachine());
 	}
 
-	public void SetInfo(CharacterInfo info)
+	public void SetInfo(CharacterInfo info, int orderLayer)
 	{
+		anim.runtimeAnimatorController = info.animController;
+		spriteRenderer.sortingOrder = 10 + orderLayer;
 		speed = info.speed;
 		brake = info.brake;
 	}
@@ -74,6 +76,7 @@ public class LobbyCharacter : MonoBehaviour
 		}
 		// 입력이 있을 때 힘을 가해서 약간 미끄러지도록 속도를 조절한다
 		rigid.AddForce(new Vector2(moveX * speed, 0) * 15 * ObjectTime.deltaTime);
+		anim.SetFloat("speed", rigid.velocity.x);
 	}
 
 	private void SlowDown()
@@ -127,7 +130,6 @@ public class LobbyCharacter : MonoBehaviour
 	{
 		while (true)
 		{
-			Debug.Log(state);
 			switch (state)
 			{
 				case State.Idle:

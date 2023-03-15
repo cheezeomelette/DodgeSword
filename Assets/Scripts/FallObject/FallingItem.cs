@@ -27,8 +27,9 @@ public class FallingItem : MonoBehaviour
 		anim.SetTrigger("onDestroy");
 		Destroy(gameObject, 1f);
 	}
-	private void OnDestroy()
+
+	protected void CreateParticle()
 	{
-		Instantiate(particle,transform.position,Quaternion.Euler(-40,0,0), null);
+		Instantiate(particle, transform.position, Quaternion.Euler(-40,0,0), null);
 	}
 }

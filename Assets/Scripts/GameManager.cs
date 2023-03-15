@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     // 메뉴화면 오브젝트
     [SerializeField] UIManager uiManager;
     [SerializeField] Text ScoreText;
+    [SerializeField] TMP_Text coinText;
     // 칼 생성 transform
     [SerializeField] Transform swordsTransform;
 	[SerializeField] SwordGenerator swordGenerator;
@@ -17,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     // 플레이어 시작 transform
     [SerializeField] Transform startTransform;
-    [SerializeField] Player player;
+    Character player;
 
     [SerializeField] CharacterManager characterManager;
 
@@ -55,7 +57,9 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
 
         SetLobby();
-        UpdateUI();
+        UpdateScoreUI();
+        coin = PlayerPrefs.GetInt("coin");
+        UpdateCoinUI();
     }
 
 	private void Update()
@@ -79,8 +83,14 @@ public class GameManager : MonoBehaviour
     public void GetCoin()
 	{
         coin += 1;
+        PlayerPrefs.SetInt("coin", coin);
+        UpdateCoinUI();
+    }
+    private void UpdateCoinUI()
+	{
+        coinText.text = coin.ToString();
 
-	}
+    }
     // 칼 생성 속도를 앞당긴다
     public void GenerateSwordFaster()
     {
@@ -91,7 +101,7 @@ public class GameManager : MonoBehaviour
 
 
     // 점수 업데이트
-    public void UpdateUI()
+    public void UpdateScoreUI()
     {
         ScoreText.text = string.Format($"Best : {bestScore}\nScore : {score}");
     }
@@ -108,9 +118,7 @@ public class GameManager : MonoBehaviour
         // 최고점수 기록
         if (bestScore == score)
 		{
-
             Social.ReportScore(score, "CgkI6YaVy7wNEAIQBQ", (bool success) => {
-                
             });
         }
     }
@@ -118,8 +126,10 @@ public class GameManager : MonoBehaviour
     // 게임시작시
     public void StartGame()
     {
+        if (player != null)
+            Destroy(player.gameObject);
         // 초기세팅
-        player.gameObject.SetActive(true);
+        player = characterManager.CreatePlayerCharacter();
         player.Respawn(startTransform.position);
         isPlaying = true;
         swordDropCoolTime = COOLTIME;
@@ -135,7 +145,7 @@ public class GameManager : MonoBehaviour
         uiManager.SetIngame();
         swordGenerator.ClearSwords();
         itemGenerator.ClearItems();
-        UpdateUI();
+        UpdateScoreUI();
 
         // 칼을 떨어뜨리기 위한
         ObjectTime.timeScale = 1f;
@@ -159,7 +169,7 @@ public class GameManager : MonoBehaviour
 	{
         isPlaying = false;
         ObjectTime.timeScale = 1f;
-        player.gameObject.SetActive(false);
+        //player.gameObject.SetActive(false);
         uiManager.SetLobby();
         characterManager.SetLobbyCharacter();
         swordGenerator.ClearSwords();
@@ -184,7 +194,7 @@ public class GameManager : MonoBehaviour
         lb.LoadScores(scores =>
         {
             bestScore = (int)lb.localUserScore.value;
-            UpdateUI();
+            UpdateScoreUI();
         });
     }
 
@@ -201,6 +211,8 @@ public class GameManager : MonoBehaviour
 
     private void ShowResult()
 	{
+        if (player != null)
+            Destroy(player.gameObject);
         Reward[] rewards= new Reward[] { new Reward(ItemSlotType.Coin, "Coin", coin) };
         player.StopAnim();
         ObjectTime.timeScale = 0f;

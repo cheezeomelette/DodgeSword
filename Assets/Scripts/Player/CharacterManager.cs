@@ -4,33 +4,47 @@ using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
 {
-    [SerializeField] CharacterInfo[] characterInfos;
+    [SerializeField] Character[] Characters;
 	[SerializeField] Transform LobbyCharacterTransform;
 	[SerializeField] LobbyCharacter prefab;
-    [SerializeField] Player player;
+	[SerializeField] SkillUI skillUI;
+	[SerializeField] HpUI hpUI;
 
-    Dictionary<string, CharacterInfo> characterDictionary;
+	Character currentPlayerCharacter;
+	Dictionary<string, Character> characterDictionary;
 
 	private void Start()
 	{
-		characterDictionary = new Dictionary<string, CharacterInfo>();
+		characterDictionary = new Dictionary<string, Character>();
 
-		foreach(CharacterInfo info in characterInfos)
+		foreach(Character player in Characters)
 		{
-			characterDictionary.Add(info.characterName, info);
-			player.SetCharacterInfo(characterDictionary[info.characterName]);
+			characterDictionary.Add(player.characterName, player);
 		}
+		currentPlayerCharacter = Characters[0];
 	}
-	public void SetCharacter(string characterName)
+
+	public void SetPlayerCharacter(string characterName)
 	{
-        player.SetCharacterInfo(characterDictionary[characterName]);
+		currentPlayerCharacter = characterDictionary[characterName];
+	}
+
+	public Character CreatePlayerCharacter()
+	{
+		Character player = Instantiate(currentPlayerCharacter);
+
+		player.SetPlayerUI(skillUI, hpUI);
+		player.Init();
+
+		return player;
 	}
 	public void SetLobbyCharacter()
 	{
-		foreach(CharacterInfo info in characterInfos)
+		for(int i = 0; i < Characters.Length; i++)
 		{
 			LobbyCharacter newCharacter = Instantiate(prefab, new Vector3(15, 3, 0), Quaternion.identity, LobbyCharacterTransform);
-			newCharacter.SetInfo(info);
+			newCharacter.Init();
+			newCharacter.SetInfo(Characters[i].characterInfo, i);
 		}
 	}
 	public void ClearLobbyCharacter()
@@ -40,4 +54,5 @@ public class CharacterManager : MonoBehaviour
 			Destroy(child.gameObject);
 		}
 	}
+
 }

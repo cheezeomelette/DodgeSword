@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e5eee582d07e1842b743e787b291b41, type: 3}
   m_Name: SlimeInfo
   m_EditorClassIdentifier: 
+  animController: {fileID: 9100000, guid: f4a7dd0ee5379ea4c944c8adbcfb257d, type: 2}
+  idleSprite: {fileID: 21300000, guid: 906ad27146526e0498ef9704dfdb8ab0, type: 3}
+  skillSprite: {fileID: 21300000, guid: 56a3198bd66efd1448a5f6135a82a2da, type: 3}
   characterName: Slime
+  skillName: Spin
+  skillDescription: you become invincible 2second
   skillCoolTime: 3
-  speed: 130
+  speed: 120
   brake: 40
   maxHp: 3
   hp: 1

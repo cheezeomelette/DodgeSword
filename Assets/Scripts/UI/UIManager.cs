@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] GameObject inGameUI;
 	[SerializeField] GameObject stopUI;
 	[SerializeField] GameObject optionUI;
+	[SerializeField] GameObject characterSelectUI;
 	[SerializeField] TMP_Text timeText;
 	[SerializeField] ResultUI resultUI;
 
@@ -19,6 +20,7 @@ public class UIManager : MonoBehaviour
 		resultUI.gameObject.SetActive(false);
 		inGameUI.SetActive(false);
 		optionUI.SetActive(false);
+		characterSelectUI.SetActive(false);
 	}
 
 	public void SetIngame()
@@ -27,6 +29,7 @@ public class UIManager : MonoBehaviour
 		lobbyUI.SetActive(false);
 		stopUI.SetActive(false);
 		resultUI.gameObject.SetActive(false);
+		characterSelectUI.SetActive(false);
 	}
 
 	public void PauseGame()
@@ -39,6 +42,10 @@ public class UIManager : MonoBehaviour
 		stopUI.SetActive(false);
 	}
 
+	public void ShowCharacterUI()
+	{
+		characterSelectUI.SetActive(true);
+	}
 
 	public void SetResult(int score, int best, Reward[] rewards)
 	{

@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class CharacterSlot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] CharacterInfo info;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	public System.Action<CharacterInfo> SelectCallback;
+	
+	public void OnClickSlot()
+	{
+		SelectCallback(info);
+	}
 }

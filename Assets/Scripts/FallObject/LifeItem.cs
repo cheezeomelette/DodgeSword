@@ -9,8 +9,9 @@ public class LifeItem : FallingItem
 		base.OnCollisionEnter2D(collision);
 		if (collision.gameObject.CompareTag("Player"))
 		{
-			collision.gameObject.GetComponent<Player>().GetLife();
+			collision.gameObject.GetComponent<Character>().GetLife();
 			SoundManager.Instance.Play("GetLife");
+			CreateParticle();
 			Destroy(gameObject);
 		}
 	}

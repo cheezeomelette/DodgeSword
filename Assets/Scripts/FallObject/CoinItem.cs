@@ -9,8 +9,9 @@ public class CoinItem : FallingItem
 		base.OnCollisionEnter2D(collision);
 		if (collision.gameObject.CompareTag("Player"))
 		{
-			collision.gameObject.GetComponent<Player>().GetCoin();
+			collision.gameObject.GetComponent<Character>().GetCoin();
 			SoundManager.Instance.Play("GetCoin");
+			CreateParticle();
 			Destroy(gameObject);
 		}
 	}
